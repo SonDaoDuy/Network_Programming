@@ -18,16 +18,25 @@ int getNumberOfCourse(FILE *fp){
     return size;
 }
 
-// void print_courses(COURSE *all_course){
-// 	printf("%-10s|%-25s|%-15s|%-15s|%-10s|%-25s|%-15s\n","Code","Course","Week Day","AM/PM","Period","Week","Room" );
+void print_courses(node_t *node){
+	printf("%-10s|%-25s|%-15s|%-15s|%-6s|%-20s|%-10s\n","Code","Course","Week Day","AM/PM","Period","Week","Room" );
     
-//     while(all_course != NULL){
-//         // COURSE *all_course = node->course;
-//         // printf("%-10s|%-25s|%-15s|%-15s|%d-%d|\n",all_course->course_id,all_course->course_name,getDayName(all_course->course_day),getDayAmPm(all_course->course_am_pm),all_course->period[0],all_course->period[1]);
-//         printf("%-10s|%-25s\n",all_course->course_id,all_course->course_name);
-//         all_course = all_course->next;
-//     }
-// }
+    while(node != NULL){
+        COURSE *all_course = node->course;
+        // printf("%-10s|%-25s|%-15s|%-15s|%d-%d|\n",all_course->course_id,all_course->course_name,
+        //getDayName(all_course->course_day),getDayAmPm(all_course->course_am_pm),all_course->period[0],all_course->period[1]);
+        printf("%-10s|%-25s|%-15s|%-15s|%2d - %d|",all_course->course_id,all_course->course_name,
+            getDayName(all_course->course_day),
+            getDayAmPm(all_course->course_am_pm-1),all_course->period[0],all_course->period[1]);
+        
+        if(all_course->week[2] != NULL){
+            printf("%-6s,%-6s,%-6s|%-10s\n",all_course->week[0],all_course->week[1],all_course->week[2],all_course->room );
+        }else{
+            printf("%-6s-%-6s%-7s|%-10s\n",all_course->week[0],all_course->week[1]," ",all_course->room );
+        }
+        node = node->next;
+    }
+}
 
 
 
@@ -54,7 +63,7 @@ int main(int argc, char const *argv[])
         token = strtok(buff,",");
         all_course->course_id = (char*) malloc(sizeof(char)*(strlen(token)+1));
         all_course->course_id = token;
-        // printf("%s\n", all_course.course_id);
+        printf("%s\n", all_course->course_id);
 
         token = strtok(NULL,",");
         all_course->course_name = (char*) malloc(sizeof(char)*(strlen(token)+1));
@@ -82,7 +91,7 @@ int main(int argc, char const *argv[])
         while(ret == NULL){
             all_course->week[i] = (char*) malloc(sizeof(char)*(strlen(token)+1));
             all_course->week[i] = token;
-            //printf("%s\n",all_course.week[i]);
+            printf("%s\n",all_course->week[i]);
             i++;
             token = strtok(NULL,",");
             ret = strchr(token,c);
@@ -100,12 +109,12 @@ int main(int argc, char const *argv[])
             //head->course = all_course;
             head->next = NULL;
             cur = head;
-            printf("1\n");
-            printf("%s\n","head:" );
-            printNode(head);
-            printf("%s\n","cur:" );
-            printNode(cur);
-            printf("done\n");
+            // printf("1\n");
+            // printf("%s\n","head:" );
+            // printNode(head);
+            // printf("%s\n","cur:" );
+            // printNode(cur);
+            // printf("done\n");
             flag = 1;
             
         }else{
@@ -120,10 +129,10 @@ int main(int argc, char const *argv[])
             cur->next = new_node;
 
             cur = cur->next;
-            printf("%s\n","head:" );
-            printNode(head);
-            printf("%s\n","cur:" );
-            printNode(cur);
+            // printf("%s\n","head:" );
+            // printNode(head);
+            // printf("%s\n","cur:" );
+            // printNode(cur);
             //free(new_node);
            } 
         
@@ -133,7 +142,7 @@ int main(int argc, char const *argv[])
 
     fclose(fp);
 
-    // print_courses(head);
+    print_courses(head);
 
     return 0;
 }

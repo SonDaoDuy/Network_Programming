@@ -60,11 +60,12 @@ void assignTwoCourse(COURSE *course_src, COURSE *course_des){
 	course_des->course_am_pm = course_src->course_am_pm;
 	course_des->period[0] = course_src->period[0];
 	course_des->period[1] = course_src->period[1];
-	int i = 0;
-	while(course_src->week[i] != NULL){
-		course_des->week[i] = (char*) malloc(sizeof(char)*strlen(course_src->week[i])+1);
-		strcpy(course_des->week[i],course_src->week[i]);
-		i++;
+	int index = 0;
+	while(course_src->week[index] != NULL){
+		course_des->week[index] = (char*) malloc(sizeof(char)*strlen(course_src->week[index])+1);
+		strcpy(course_des->week[index],course_src->week[index]);
+		// printf("%s\n",course_des->week[i] );
+		index++;
 	}
 	course_des->room = (char*) malloc(sizeof(char)*strlen(course_src->room)+1);
 	strcpy(course_des->room,course_src->room);
