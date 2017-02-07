@@ -1,20 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-enum day {Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday};
-enum am_pm {Morning,Afternoon};
-
-typedef struct course
-{
-    char *course_id;
-    char *course_name;
-    enum day course_day;
-    enum am_pm course_am_pm;
-    int period[2];
-    char *week;
-    char *room;
-}COURSE;
+#include "list.h"
 
 int getNumberOfCourse(FILE *fp){
     int size = 0;
@@ -31,65 +18,124 @@ int getNumberOfCourse(FILE *fp){
     return size;
 }
 
+// void print_courses(COURSE *all_course){
+// 	printf("%-10s|%-25s|%-15s|%-15s|%-10s|%-25s|%-15s\n","Code","Course","Week Day","AM/PM","Period","Week","Room" );
+    
+//     while(all_course != NULL){
+//         // COURSE *all_course = node->course;
+//         // printf("%-10s|%-25s|%-15s|%-15s|%d-%d|\n",all_course->course_id,all_course->course_name,getDayName(all_course->course_day),getDayAmPm(all_course->course_am_pm),all_course->period[0],all_course->period[1]);
+//         printf("%-10s|%-25s\n",all_course->course_id,all_course->course_name);
+//         all_course = all_course->next;
+//     }
+// }
+
+
+
 int main(int argc, char const *argv[])
 {
-    /* code */
-
+    /* code */   
+    node_t *cur = NULL;
+	char c = ';';
     char buff[256];
     FILE *fp;
     fp = fopen(argv[1],"r");
     int size = getNumberOfCourse(fp);
     //printf("%d\n", size);
     char *token;
-    COURSE *all_course;
-    all_course = (COURSE*) malloc(sizeof(COURSE)*size);
-    int index = 0;
+    char *ret;
+    int flag = 0;
+    int i = 0;
     char s[] = "; ";
     while (fgets(buff, sizeof(buff), fp)) {
         /* note that fgets don't strip the terminating \n, checking its
            presence would allow to handle lines longer that sizeof(line) */
         //printf("%s", buff);
+        COURSE *all_course = (COURSE*) malloc(sizeof(COURSE));
         token = strtok(buff,",");
-        //printf("%s\n",token[0]);
-        all_course[index].course_id = (char*) malloc(sizeof(char)*(strlen(token)+1));
-        all_course[index].course_id = token;
-        printf("%s\n", all_course[index].course_id);
+        all_course->course_id = (char*) malloc(sizeof(char)*(strlen(token)+1));
+        all_course->course_id = token;
+        // printf("%s\n", all_course.course_id);
+
         token = strtok(NULL,",");
-        all_course[index].course_name = (char*) malloc(sizeof(char)*(strlen(token)+1));
-        all_course[index].course_name = token;
-        printf("%s\n", all_course[index].course_name);
+        all_course->course_name = (char*) malloc(sizeof(char)*(strlen(token)+1));
+        all_course->course_name = token;
+        // printf("%s\n", all_course.course_name);
+
         token = strtok(NULL,",");
+
         token = strtok(NULL,",");
         int day1 = atoi(token);
-        all_course[index].course_day = day1/100;
-        printf("%d\n",all_course[index].course_day);
-        all_course[index].course_am_pm = (day1%100)/10;
-        printf("%d\n",all_course[index].course_am_pm);
-        all_course[index].period[0] = day1%10;
-        printf("%d\n",all_course[index].period[0]);
+        all_course->course_day = day1/100;
+        // printf("%d\n",all_course.course_day);
+        all_course->course_am_pm = (day1%100)/10;
+        // printf("%d\n",all_course.course_am_pm);
+        all_course->period[0] = day1%10;
+        // printf("%d\n",all_course.period[0]);
         token = strtok(NULL,",");
         int day2 = atoi(token);
-        all_course[index].period[1] = day2%10;
-        printf("%d\n",all_course[index].period[1]);
+        all_course->period[1] = day2%10;
+        // printf("%d\n",all_course.period[1]);
+
         token = strtok(NULL,",");
-        all_course[index].week = (char*) malloc(sizeof(char)*(strlen(token)+1));
-        all_course[index].week = token;
-        printf("%s\n",all_course[index].week);
-        token = strtok(NULL,",");
-        printf("%s\n",token );
-        all_course[index].week = strcat(all_course[index].week,strcat(s,token));
-        printf("%s\n",all_course[index].week);
-        // token = strtok(NULL,",");
-        // all_course[index].week = strcat(all_course[index].week,strcat(s,token));
-        // printf("%s\n",all_course[index].week);
-        // token = strtok(NULL,",");
-        // all_course[index].room = (char*) malloc(sizeof(char)*(strlen(token)+1));
-        // all_course[index].room = token;
-        // printf("%s\n",all_course[index].room);
-        index++;
+        
+        ret = strchr(token,c);
+        while(ret == NULL){
+            all_course->week[i] = (char*) malloc(sizeof(char)*(strlen(token)+1));
+            all_course->week[i] = token;
+            //printf("%s\n",all_course.week[i]);
+            i++;
+            token = strtok(NULL,",");
+            ret = strchr(token,c);
+        }
+        all_course->room = (char*) malloc(sizeof(char)*(strlen(token)-1));
+        strncpy(all_course->room,token,strlen(token)-2);
+        
+        
+
+        if(flag == 0){
+            head = (node_t*) malloc(sizeof(node_t));
+            head->course = (COURSE*) malloc(sizeof(COURSE));
+            // viet lai phep gan
+            assignTwoCourse(all_course, head->course);
+            //head->course = all_course;
+            head->next = NULL;
+            cur = head;
+            printf("1\n");
+            printf("%s\n","head:" );
+            printNode(head);
+            printf("%s\n","cur:" );
+            printNode(cur);
+            printf("done\n");
+            flag = 1;
+            
+        }else{
+            node_t *new_node = (node_t*) malloc(sizeof(node_t));
+
+            new_node->course = (COURSE*) malloc(sizeof(COURSE));
+            assignTwoCourse(all_course, new_node->course);
+            
+            new_node->next = NULL;
+            // addToList(cur,new_node);
+            
+            cur->next = new_node;
+
+            cur = cur->next;
+            printf("%s\n","head:" );
+            printNode(head);
+            printf("%s\n","cur:" );
+            printNode(cur);
+            //free(new_node);
+           } 
+        
+        // freeCourse(all_course);
     }
 
 
     fclose(fp);
+
+    // print_courses(head);
+
     return 0;
 }
+
+
