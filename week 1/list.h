@@ -54,17 +54,21 @@ void printNode(node_t *node){
 void assignTwoCourse(COURSE *course_src, COURSE *course_des){
 	course_des->course_id = (char*) malloc(sizeof(char)*strlen(course_src->course_id)+1);
 	strcpy(course_des->course_id,course_src->course_id);
+	// printf("%s\n",course_src->course_id );
 	course_des->course_name = (char*) malloc(sizeof(char)*strlen(course_src->course_name)+1);
 	strcpy(course_des->course_name,course_src->course_name);
+	// printf("%s\n",course_src->course_name );
 	course_des->course_day = course_src->course_day;
 	course_des->course_am_pm = course_src->course_am_pm;
 	course_des->period[0] = course_src->period[0];
 	course_des->period[1] = course_src->period[1];
 	int index = 0;
+	// printf("%s\n",course_src->week[index] );
 	while(course_src->week[index] != NULL){
 		course_des->week[index] = (char*) malloc(sizeof(char)*strlen(course_src->week[index])+1);
+
 		strcpy(course_des->week[index],course_src->week[index]);
-		// printf("%s\n",course_des->week[i] );
+		// printf("%s\n",course_des->week[index] );
 		index++;
 	}
 	course_des->room = (char*) malloc(sizeof(char)*strlen(course_src->room)+1);
