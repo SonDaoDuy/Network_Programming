@@ -16,7 +16,12 @@ int main (int argc, char **argv)
  socklen_t clilen;
  char buf[MAXLINE];
  struct sockaddr_in cliaddr, servaddr;
-	
+	/* Tao socket
+		cau hinh cho socket: 
+		bind socket
+		set listen client number
+		handle the recevie message
+		*/
  //creation of the socket
  listenfd = socket (AF_INET, SOCK_STREAM, 0);
 	
@@ -26,7 +31,7 @@ int main (int argc, char **argv)
  servaddr.sin_port = htons(SERV_PORT);
 	
  bind (listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
- 
+	
  listen (listenfd, LISTENQ);
 	
  printf("%s\n","Server running...waiting for connections.");
@@ -40,7 +45,9 @@ int main (int argc, char **argv)
   while ( (n = recv(connfd, buf, MAXLINE,0)) > 0)  {
    printf("%s","String received from and resent to the client:");
    puts(buf);
+
    send(connfd, buf, n, 0);
+   strcpy(buf,"");
   }
 			
  if (n < 0) {
